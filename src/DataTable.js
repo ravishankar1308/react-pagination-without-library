@@ -1,16 +1,8 @@
-import React, { useEffect, useState } from "react";
-import {
-    Button,
-    Table,
-    Text,
-    Card,
-    Pagination,
-    DropdownButton,
-    Dropdown
-} from "react-bootstrap";
+import React, {useEffect, useState} from "react";
+import {Card, Table} from "react-bootstrap";
 import axios from "axios";
 import Select from "react-select";
-// import Pagination from "./components/Pagination";
+import _Pagination from "./components/Pagination";
 
 const DataTable = () => {
     useEffect(() => {
@@ -24,26 +16,50 @@ const DataTable = () => {
             });
     }, []);
 
-    const fetchData = value => {
-        console.log(value);
-        axios
-            .get(`https://jsonplaceholder.typicode.com/posts?_page=5&_limit=$(value)`)
-            .then(async res => {
-                const posts = await res.data;
-                await setPost(posts);
-                setPage(posts.length / limit);
-            });
+    // const fetchData = value => {
+    //     console.log(value);
+    //     axios
+    //         .get(`https://jsonplaceholder.typicode.com/posts?_page=5&_limit=${value.value}`)
+    //         .then(async res => {
+    //             const posts = await res.data;
+    //             await setPost(posts);
+    //             setPage(posts.length / limit);
+    //         });
+    // };
+
+    const onPageChanged = data => {
+
+        const { currentPage, totalPages, pageLimit } = data;
+
+        const offset = (currentPage - 1) * pageLimit;
+        const filterpost = post.slice(offset, offset + pageLimit);
+        setPost(filterpost);
+        // setState({ currentPage, currentCountries, totalPages });
     };
-    options = [
+    // onPageChanged = data => {
+    //     const { allCountries } = this.state;
+    //     const { currentPage, totalPages, pageLimit } = data;
+    //
+    //     const offset = (currentPage - 1) * pageLimit;
+    //     const currentCountries = allCountries.slice(offset, offset + pageLimit);
+    //
+    //     this.setState({ currentPage, currentCountries, totalPages });
+    // };
+
+    const options = [
         { label: 5, value: 5 },
         { label: 10, value: 10 },
         { label: 25, value: 25 },
         { label: 25, value: 25 }
     ];
     const [post, setPost] = useState([]);
+    const [currentPage, setCuttentpage] = useState();
+    const [currentCountries, setCurrentCountries] = useState([]);
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(9);
     const [activePage, setActivePage] = useState(8);
+
+    const totalpost = post.length;
     return (
         <div>
             limit:{JSON.stringify(limit)}
@@ -77,41 +93,41 @@ const DataTable = () => {
                     </tbody>
                 </Table>
                 <div style={{ alignSelf: "center" }}>
-                    <Select
-                        options={options}
-                        value={limit}
-                        onChange={value => fetchData(value)}
-                        defaultValue={{ label: 2002, value: 2002 }}
-                    />
-                    <DropdownButton id="dropdown-basic-button" title={limit}>
-                        <Dropdown.Item value="5" onChange={fetchData()}>
-                            5
-                        </Dropdown.Item>
-                        <Dropdown.Item onChange={fetchData()}>10</Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">25</Dropdown.Item>
-                    </DropdownButton>
-                    <Pagination>
-                        <Pagination.First />
-                        <Pagination.Prev />
+                    {/*<Select*/}
+                    {/*    options={options}*/}
+                    {/*    value={limit}*/}
+                    {/*    onChange={value => fetchData(value)}*/}
+                    {/*    defaultValue={{ label: 2002, value: 2002 }}*/}
+                    {/*/>*/}
+                    {/*<DropdownButton id="dropdown-basic-button" title={limit}>*/}
+                    {/*    /!*<Dropdown.Item value="5" onChange={fetchData()}>*!/*/}
+                    {/*    /!*    5*!/*/}
+                    {/*    /!*</Dropdown.Item>*!/*/}
+                    {/*    /!*<Dropdown.Item onChange={() => fetchData()}>10</Dropdown.Item>*!/*/}
+                    {/*    <Dropdown.Item href="#/action-3">25</Dropdown.Item>*/}
+                    {/*</DropdownButton>*/}
+                    {/*<Pagination>*/}
+                    {/*    <Pagination.First />*/}
+                    {/*    <Pagination.Prev />*/}
 
-                        <Pagination.Item>{1}</Pagination.Item>
-                        {/* <Pagination.Ellipsis /> */}
+                    {/*    <Pagination.Item>{1}</Pagination.Item>*/}
+                    {/*    /!* <Pagination.Ellipsis /> *!/*/}
 
-                        <Pagination.Item>{7}</Pagination.Item>
-                        <Pagination.Item active>{activePage}</Pagination.Item>
-                        <Pagination.Item>{9}</Pagination.Item>
+                    {/*    <Pagination.Item>{7}</Pagination.Item>*/}
+                    {/*    <Pagination.Item active>{activePage}</Pagination.Item>*/}
+                    {/*    <Pagination.Item>{9}</Pagination.Item>*/}
 
-                        {/* <Pagination.Ellipsis /> */}
-                        <Pagination.Item>{page}</Pagination.Item>
-                        <Pagination.Next />
-                        <Pagination.Last />
-                    </Pagination>
-                    {/* <Pagination
-            totalRecords={totalPost}
+                    {/*    /!* <Pagination.Ellipsis /> *!/*/}
+                    {/*    <Pagination.Item>{page}</Pagination.Item>*/}
+                    {/*    <Pagination.Next />*/}
+                    {/*    <Pagination.Last />*/}
+                    {/*</Pagination>*/}
+                    { <_Pagination
+            totalRecords={totalpost}
             pageLimit={2}
             pageNeighbours={1}
             onPageChanged={onPageChanged}
-          /> */}
+          />}
                 </div>
             </Card>
         </div>
